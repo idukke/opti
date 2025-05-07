@@ -15,8 +15,10 @@
             text-align: center;
         }
         button{
-            position: relative;
+            display: flex;
             margin: 10px auto;
+            font-weight: bold;
+            border: none;
         }
         
         .foto{
@@ -35,49 +37,136 @@
             background-color: rgb(243, 243, 243);
             border: solid limegreen 2px;;
         }
+        .card-container{
+            width: 50vw;
+            display: flex;
+            flex-direction: row;
+            margin: 0 auto;
+        }
+        fieldset{
+            display: flex;
+            flex-direction: column;
+        }
+        label{
+            width: 90%;
+            margin: 0 auto;
+        }
+        input{
+            width: 90%;
+            border: none;
+            margin: 0 auto;
+            margin-bottom: 10px;
+        }
+        section{
+            margin-bottom: 20px;
+        }
+        #sign-up input, #sign-up button{
+            background-color: #8aa5b3;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 15px;
+        }
+        #log-in input, #log-in button{
+            background-color: #8bb38a;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 15px;
+        }
     </style>
 </head>
 
 <body>
-    <h1>Hola!</h1>
-    
-    <div class="card">
-        <h4>DEA</h4>
-        <div class="foto">
-            <img src="rick&morty.png" alt="" srcset="">
+    <h1>Ejercicios Despliegue</h1>
+    <div class="card-container">
+        <div class="card">
+            <h4>DEA</h4>
+            <div class="foto">
+                <img src="rick&morty.png" alt="" srcset="">
+            </div>
+            <button onclick="finder()" class="btn btn-primary">Finder</button>
+            <br>
+            <h5>Dirección</h5>
+            <span id="dea">Encuentra tu DEA más cercano</span>
+            <br>
+            <h5>Localidad</h5>
+            <span id="dea-loca">Localidad más cercana</span>
+
         </div>
-        <button onclick="finder()" class="btn btn-primary">Finder</button>
-        <br>
-        <h5>Dirección</h5>
-        <span id="dea">Encuentra tu DEA más cercano</span>
-        <br>
-        <h5>Localidad</h5>
-        <span id="dea-loca">Localidad más cercana</span>
+        <div class="card">
+            <section id="sign-up">
+                <h2>Registrarse</h2>
+                <form id="signup-form">
+                    <fieldset>
+                        <label for="username">Usuario:</label>
+                        <input type="text" id="username" name="username" placeholder="Nombre de usuario" required>
+                    </fieldset>
+                    
+                    <fieldset>
+                        <label for="email">Email:</label>
+                        <input type="email" id="email" name="email" placeholder="Correo electrónico" required>
+                    </fieldset>
+                    
+                    <fieldset>
+                        <label for="password">Contraseña:</label>
+                        <input type="password" id="password" name="password" placeholder="Contraseña" required>
+                    </fieldset>
 
+                    <button type="submit">Registrarse</button>
+                </form>
+            </section>
+            <section id="log-in">
+                <h2>Iniciar sesión</h2>
+                <form id="login-form">
+                    <fieldset>
+                        <label for="username-login">Usuario:</label>
+                        <input type="text" id="username-login" name="username-login" placeholder="Nombre de usuario" required>
+                    </fieldset>
+                    
+                    <fieldset>
+                        <label for="password-login">Contraseña:</label>
+                        <input type="password" id="password-login" name="password-login" placeholder="Contraseña" required>
+                    </fieldset>
+                    <button type="submit">Iniciar sesión</button>
+                </form>
+            </section>
+            <p id="message"></p>
+        </div>
     </div>
-    <h2>Registro</h2>
-  <form id="registerForm">
-    <input type="text" name="username" placeholder="Nombre de usuario" required><br>
-    <input type="email" name="email" placeholder="Correo electrónico" required><br>
-    <input type="password" name="password" placeholder="Contraseña" required><br>
-    <button type="submit">Registrarse</button>
-  </form>
-
-  <p id="message"></p>
+  
 
   <script>
-    const form = document.getElementById('registerForm');
-    form.addEventListener('submit', async (e) => {
+    const signupForm = document.getElementById('signup-form');
+    signupForm.addEventListener('submit', async (e) => {
       e.preventDefault();
 
-      const formData = new FormData(form);
+      const formData = new FormData(signupForm);
       const data = {
         username: formData.get('username'),
         email: formData.get('email'),
         password: formData.get('password')
       };
 
-      const res = await fetch('http://localhost:3000/register', {
+      const res = await fetch('http://localhost:3002/signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+
+      const result = await res.json();
+      document.getElementById('message').textContent = result.message;
+    });
+
+    const loginForm = document.getElementById('login-form');
+    loginForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const formData = new FormData(loginForm);
+      const data = {
+        username: formData.get('username-login'),
+        password: formData.get('password-login')
+      };
+
+      const res = await fetch('http://localhost:3002/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)

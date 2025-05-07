@@ -3,9 +3,11 @@ const path = require('path');
 const fs = require('fs');
 
 const app = express();
-const PORT = 3000;
+const PORT = 3002;
 
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.json());
+
 const USERS_FILE = path.join(__dirname, 'users.json');
 
 
@@ -16,21 +18,45 @@ res.sendFile(path.join(__dirname, 'public/index.html'));
 if (!fs.existsSync(USERS_FILE)) {
     fs.writeFileSync(USERS_FILE, '[]');
   }  
-app.post(register, (req, res) => {
+app.post('/signup', (req, res) => {
     const {username, email, password} = req.body;
+    
+    if(password.length < 4){
+      res.status(201).json({ message: 'La contraseña debe tener mínimo 4 caracteres' });
+    }
+    // Leer usuarios actuales
+    const users = JSON.parse(fs.readFileSync(USERS_FILE, 'utf-8'));
+    
+    // Verificar usuario
+    const user = users.find(u => u.username === username && u.email === email && u.password === password);
+    if(user){
+      return res.status(401).json({message: 'El usuario ya existe'})
+    }
+
+    // Agregar nuevo usuario
+    //TODO: Encriptar contraseña
+    users.push({ username, email, password });
+    fs.writeFileSync(USERS_FILE, JSON.stringify(users, null, 2));
+  
+    // Respuesta
+    res.status(201).json({ message: 'Usuario registrado correctamente' });
+} )
+
+app.post('/login', (req, res) => {
+  const {username, password} = req.body;
+
+  // Leer usuarios actuales
+  const users = JSON.parse(fs.readFileSync(USERS_FILE, 'utf-8'));
+
+  // Verificar usuario
+  const user = users.find(u => u.username === username && u.password === password);
+  if(!user){
+    return res.status(401).json({message: 'Usuario o contraseña incorrectos'})
+  }
+  // Respuesta
+  res.status(201).json({ message: `${username} ha iniciado sesión` });
 } )
 
 app.listen(PORT, () => {
 console.log(`Server running at http://localhost:${PORT}`);
 });
-
-/*
-ssh u3002@95.111.234.50
-clave: 3002
-95.111.234.50*/ */
-
-
-//git clone 'url a desplegar'
-//npm install
-
-//contabo.com
