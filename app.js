@@ -6,7 +6,9 @@ const cors = require('cors');
 const app = express();
 const PORT = 3002;
 
-app.use(cors());
+app.use(cors({
+  origin: 'http://95.111.234.50:3002'
+}));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
 
