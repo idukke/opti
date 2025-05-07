@@ -6,9 +6,14 @@ const cors = require('cors');
 const app = express();
 const PORT = 3002;
 
-app.use(cors({
-  origin: 'http://95.111.234.50:3002'
+const allowedOrigins = process.env.NODE_ENV === 'production'
+  ? ['http://95.111.234.50:3002'] 
+  : ['http://localhost:3002']; 
+
+  app.use(cors({
+  origin: allowedOrigins
 }));
+
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
 
