@@ -186,7 +186,7 @@
          window.navigator.geolocation.getCurrentPosition(async (gp) => {            
             let lat = gp.coords.latitude;
             let lon = gp.coords.longitude;
-            const res = await fetch(`https://deamadrid.com/api/finder?lat=${lat}&lon=${lon}`, {
+            const res = await fetch(`https://cors-anywhere.herokuapp.com/https://deamadrid.com/api/finder?lat=${lat}&lon=${lon}`, {
                 method: "GET"
             });
             const data = await res.json();
