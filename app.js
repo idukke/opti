@@ -2,9 +2,28 @@ const express = require('express');
 const path = require('path');
 const fs = require('fs');
 const cors = require('cors');
+const https = require('https');
 
 const app = express();
 const PORT = 3002;
+
+
+app.get('/api/finder', (req, res) => {
+  const { lat, lon } = req.query;
+  const url = `https://deamadrid.com/api/finder?lat=${lat}&lon=${lon}`;
+
+  https.get(url, (apiRes) => {
+    let data = '';
+    apiRes.on('data', chunk => { data += chunk });
+    apiRes.on('end', () => {
+      res.setHeader('Content-Type', 'application/json');
+      res.status(apiRes.statusCode).send(data);
+    });
+  }).on('error', (err) => {
+    console.error('Error al obtener datos de deamadrid:', err.message);
+    res.status(500).json({ error: 'Error al obtener datos de deamadrid' });
+  });
+});
 
 const allowedOrigins = process.env.NODE_ENV === 'production'
   ? ['https://idukke.xyz'] 

@@ -192,8 +192,8 @@
     
 </body>
 <script>
-    /* const url = "https://apiscm.comunidad.madrid/t/ciudadanos.comunidad.madrid/sector-publico/catalogo-unificado/v1/recursos/94756e35-3059-451d-81a6-3427d2551de4/datos?distintos=true&formato=objects&$init=0&$limit=100"; */
-    const finder = () => {
+    const res = await fetch(`/api/finder?lat=${lat}&lon=${lon}`);
+    /* const finder = () => {
         document.getElementById("dea").innerHTML = "Obteniendo dirección...";
         document.getElementById("dea-loca").innerHTML = "Obteniendo localidad...";
          window.navigator.geolocation.getCurrentPosition(async (gp) => {            
@@ -213,7 +213,7 @@
             }   
 
         });
-    }
+    } */
 
 </script>
 
