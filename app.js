@@ -66,6 +66,11 @@ app.post('/login', (req, res) => {
   res.status(201).json({ message: `${username} ha iniciado sesión` });
 } )
 
+// Middleware para rutas no encontradas (404)
+app.use((req, res, next) => {
+  res.status(404).redirect('https://idukke.xyz');
+});
+
 app.listen(PORT, () => {
 console.log(`Server running at http://localhost:${PORT}`);
 });
