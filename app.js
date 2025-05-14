@@ -7,7 +7,7 @@ const app = express();
 const PORT = 3002;
 
 const allowedOrigins = process.env.NODE_ENV === 'production'
-  ? ['http://95.111.234.50:3002'] 
+  ? ['https://idukke.xyz'] 
   : ['http://localhost:3002']; 
 
   app.use(cors({
